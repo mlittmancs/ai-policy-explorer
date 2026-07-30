@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Policy Explorer for Faculty</title>
+    <link rel="icon" type="image/png" href="https://www.brown.edu/themes/custom/brown/static/favicon-32x32.png">
+    <link rel="stylesheet" href="styles/ai-policy-explorer.css?v=4">
+</head>
+<body>
+    <div id="page">
+        <header>
+            <h1>AI Policy Explorer for Faculty</h1>
+            <p class="byline">Brown University</p>
+            <p class="subtitle">
+                This tool is designed to help you draft a course-level AI-policy specific to your needs. Reflect
+                on the course learning objectives, assessments, and/or learning activities of the course to
+                determine the kinds of learning that are most important for your students to achieve. Clicking
+                the checkboxes next to the prohibited and acceptable uses causes the page to assemble a list of
+                your selections at the bottom of the page. Use the "copy to clipboard" button to copy the
+                resulting AI policy language into your own document and make any edits you wish to make to that
+                document.
+            </p>
+        </header>
+
+        <div id="status-banner" class="status-banner" hidden></div>
+
+        <main id="app" hidden>
+            <section class="panel" aria-labelledby="prohibited-heading">
+                <h2 id="prohibited-heading">Prohibited GenAI Uses</h2>
+                <p class="panel-help">Check any uses that should not be permitted in your course.</p>
+                <ul id="prohibited-list" class="card-list"></ul>
+            </section>
+
+            <section class="panel" aria-labelledby="allowed-heading">
+                <h2 id="allowed-heading">Allowed Uses to Support Learning</h2>
+                <p class="panel-help">Check any use profiles you want to permit in your course. Each includes the guardrail needed to protect academic integrity.</p>
+                <ul id="allowed-list" class="card-list"></ul>
+            </section>
+
+            <section id="collection-box" class="panel collection-box" aria-labelledby="collection-heading">
+                <h2 id="collection-heading">Your Course AI Policy</h2>
+                <p class="panel-help">Selections you make above are collected here and assembled into policy language for your syllabus.</p>
+
+                <h3>Prohibited Uses <span id="prohibited-count" class="count-badge">0</span></h3>
+                <ul id="selected-prohibited" class="selection-list empty">
+                    <li class="empty-msg">No prohibited uses selected yet.</li>
+                </ul>
+
+                <h3>Allowed Uses <span id="allowed-count" class="count-badge">0</span></h3>
+                <ul id="selected-allowed" class="selection-list empty">
+                    <li class="empty-msg">No allowed uses selected yet.</li>
+                </ul>
+
+                <div class="collection-actions">
+                    <button type="button" id="copy-btn">Copy to Clipboard</button>
+                    <button type="button" id="clear-btn" class="secondary-btn">Clear All</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- bump ?v= on every deploy that touches these files, so browsers don't serve a stale cached copy -->
+    <script src="scripts/ai-policy-explorer-fallback-data.js?v=4"></script>
+    <script src="scripts/ai-policy-explorer.js?v=4"></script>
+</body>
+</html>
