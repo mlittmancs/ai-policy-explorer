@@ -7,6 +7,10 @@
     var TAB_ALLOWED = 'Allowed Uses to Support Learning';
     var TAB_LANGUAGE = 'Language for document';
 
+    var RESPONSES_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfQakD3zWyq6cDn6qh_pkJhsppy1FqORx-denPtb7dtWAtC_Q/formResponse';
+    var RESPONSES_ENTRY_PROHIBITED = 'entry.1280420762';
+    var RESPONSES_ENTRY_ALLOWED = 'entry.231905402';
+
     var LANGUAGE_KEYS = ['title', 'intro', 'prohibit', 'permit', 'conclusion'];
 
     var STORAGE_KEY = 'aiPolicyExplorer.selections.v2';
@@ -224,6 +228,7 @@
         el.prohibitedCount = document.getElementById('prohibited-count');
         el.allowedCount = document.getElementById('allowed-count');
         el.copyBtn = document.getElementById('copy-btn');
+        el.sendBtn = document.getElementById('send-btn');
         el.clearBtn = document.getElementById('clear-btn');
     }
 
@@ -422,7 +427,9 @@
 
         syncCheckboxes();
 
-        el.copyBtn.disabled = (prohibitedKeys.length + allowedKeys.length) === 0;
+        var hasSelections = (prohibitedKeys.length + allowedKeys.length) > 0;
+        el.copyBtn.disabled = !hasSelections;
+        el.sendBtn.disabled = !hasSelections;
     }
 
     function syncCheckboxes() {
@@ -513,6 +520,44 @@
         document.body.removeChild(textarea);
     }
 
+    function buildResponsesPayload() {
+        var prohibitedText = Object.keys(state.selectedProhibited)
+            .map(function (key) { return state.selectedProhibited[key]; })
+            .join('\n');
+
+        var allowedText = Object.keys(state.selectedAllowed)
+            .map(function (key) {
+                var a = state.selectedAllowed[key];
+                return a.profile + ': ' + a.supports + ' ' + a.guardrail;
+            })
+            .join('\n');
+
+        return { prohibitedText: prohibitedText, allowedText: allowedText };
+    }
+
+    function handleSendResponses() {
+        var payload = buildResponsesPayload();
+        if (!payload.prohibitedText && !payload.allowedText) { return; }
+
+        var formData = new FormData();
+        formData.append(RESPONSES_ENTRY_PROHIBITED, payload.prohibitedText);
+        formData.append(RESPONSES_ENTRY_ALLOWED, payload.allowedText);
+
+        // Google Forms doesn't send CORS headers on this endpoint, so the response
+        // can't be read -- this is a best-effort, fire-and-forget submission.
+        fetch(RESPONSES_FORM_URL, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
+
+        var original = 'Send Responses';
+        el.sendBtn.textContent = 'Sent!';
+        el.sendBtn.classList.add('sent');
+        el.sendBtn.disabled = true;
+        setTimeout(function () {
+            el.sendBtn.textContent = original;
+            el.sendBtn.classList.remove('sent');
+            el.sendBtn.disabled = (Object.keys(state.selectedProhibited).length + Object.keys(state.selectedAllowed).length) === 0;
+        }, 1800);
+    }
+
     function handleClearAll() {
         if (!Object.keys(state.selectedProhibited).length && !Object.keys(state.selectedAllowed).length) { return; }
         if (!window.confirm('Clear all selected prohibited and allowed uses from your policy list?')) { return; }
@@ -524,6 +569,7 @@
 
     function attachStaticHandlers() {
         el.copyBtn.addEventListener('click', handleCopy);
+        el.sendBtn.addEventListener('click', handleSendResponses);
         el.clearBtn.addEventListener('click', handleClearAll);
     }
 

@@ -265,6 +265,7 @@ h1 {
 
 .collection-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 20px;
 }
@@ -292,6 +293,41 @@ h1 {
 
 #copy-btn.copied {
     background-color: #1e8e3e;
+}
+
+#send-btn {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #fff;
+    color: var(--brown-red);
+    border: 2px solid var(--brown-red);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#send-btn:hover {
+    background-color: var(--brown-red-tint);
+}
+
+#send-btn:disabled {
+    color: #d3a3a3;
+    border-color: #eec0c0;
+    cursor: not-allowed;
+}
+
+#send-btn.sent {
+    background-color: #1e8e3e;
+    border-color: #1e8e3e;
+    color: #fff;
+}
+
+.send-note {
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
 }
 
 .secondary-btn {
