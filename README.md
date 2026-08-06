@@ -2,7 +2,7 @@
 
 A tool to help faculty draft a course-level AI use policy. It lists prohibited and allowed generative-AI uses drawn live from a shared Google Sheet, lets faculty check off the ones relevant to their course, and assembles the selections into policy language they can copy into a syllabus.
 
-**Live site:** https://mlittmancs.github.io/ai-policy-explorer/
+**Live site:** https://policyexplorer.ai.brown.edu/
 
 ## How it works
 
