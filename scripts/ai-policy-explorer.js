@@ -549,7 +549,7 @@
         // can't be read -- this is a best-effort, fire-and-forget submission.
         fetch(RESPONSES_FORM_URL, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
 
-        var original = 'Send Responses';
+        var original = 'Share with us';
         el.sendBtn.textContent = 'Sent!';
         el.sendBtn.classList.add('sent');
         el.sendBtn.disabled = true;
