@@ -227,6 +227,7 @@
         el.selectedAllowed = document.getElementById('selected-allowed');
         el.prohibitedCount = document.getElementById('prohibited-count');
         el.allowedCount = document.getElementById('allowed-count');
+        el.clipboardPreview = document.getElementById('clipboard-preview');
         el.copyBtn = document.getElementById('copy-btn');
         el.sendBtn = document.getElementById('send-btn');
         el.clearBtn = document.getElementById('clear-btn');
@@ -430,6 +431,7 @@
         var hasSelections = (prohibitedKeys.length + allowedKeys.length) > 0;
         el.copyBtn.disabled = !hasSelections;
         el.sendBtn.disabled = !hasSelections;
+        el.clipboardPreview.value = buildClipboardText();
     }
 
     function syncCheckboxes() {

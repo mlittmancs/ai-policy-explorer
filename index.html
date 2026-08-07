@@ -118,6 +118,15 @@
                     <li class="empty-msg">No allowed uses selected yet.</li>
                 </ul>
 
+                <h3>Preview <span id="preview-label">(exactly what "Copy to Clipboard" will copy)</span></h3>
+                <textarea
+                    id="clipboard-preview"
+                    class="clipboard-preview"
+                    readonly
+                    aria-labelledby="collection-heading preview-label"
+                    placeholder="Your assembled policy text will appear here once you check some boxes above."
+                ></textarea>
+
                 <div class="collection-actions">
                     <button type="button" id="copy-btn">Copy to Clipboard</button>
                     <button type="button" id="send-btn">Send Responses</button>
