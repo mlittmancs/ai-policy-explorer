@@ -135,6 +135,22 @@ body {
     accent-color: var(--brown-red);
 }
 
+.card-item.is-disabled {
+    background-color: #f0f1f3;
+    border-color: #d7dbe0;
+}
+
+.card-item.is-disabled .card-text,
+.card-item.is-disabled .card-title,
+.card-item.is-disabled .card-supports {
+    color: #666;
+}
+
+.card-item.is-disabled .card-body label,
+.card-item.is-disabled input[type="checkbox"] {
+    cursor: not-allowed;
+}
+
 .card-body label {
     cursor: pointer;
     display: block;
@@ -250,7 +266,7 @@ body {
 
 .empty-msg {
     font-size: 13px;
-    color: #888;
+    color: #666;
     font-style: italic;
 }
 

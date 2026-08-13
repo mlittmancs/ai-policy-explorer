@@ -13,6 +13,31 @@
 
     var LANGUAGE_KEYS = ['title', 'intro', 'prohibit', 'permit', 'conclusion'];
 
+    // The "no AI use at all" and "varies by assignment" prohibited-use options are
+    // meant to stand alone: per the site's stated policy, selecting either one means
+    // no other prohibited or allowed use should be selected alongside it. Identified
+    // by distinctive substrings rather than exact text so small sheet wording edits
+    // don't silently break the match.
+    var EXCLUSIVE_PROHIBITED_MARKERS = [
+        'varies by assignment',
+        'expected not to use genai tools for any work in this course'
+    ];
+
+    function isExclusiveProhibited(use) {
+        var lower = String(use).toLowerCase();
+        return EXCLUSIVE_PROHIBITED_MARKERS.some(function (marker) {
+            return lower.indexOf(marker) !== -1;
+        });
+    }
+
+    function activeExclusiveProhibited() {
+        var keys = Object.keys(state.selectedProhibited);
+        for (var i = 0; i < keys.length; i++) {
+            if (isExclusiveProhibited(keys[i])) { return keys[i]; }
+        }
+        return null;
+    }
+
     var STORAGE_KEY = 'aiPolicyExplorer.selections.v2';
     var JSONP_TIMEOUT_MS = 12000;
 
@@ -220,6 +245,7 @@
 
     function cacheElements() {
         el.statusBanner = document.getElementById('status-banner');
+        el.exclusiveBanner = document.getElementById('exclusive-banner');
         el.app = document.getElementById('app');
         el.prohibitedList = document.getElementById('prohibited-list');
         el.allowedList = document.getElementById('allowed-list');
@@ -266,6 +292,10 @@
             checkbox.checked = !!state.selectedProhibited[use];
             checkbox.addEventListener('change', function () {
                 if (checkbox.checked) {
+                    if (isExclusiveProhibited(use)) {
+                        state.selectedProhibited = {};
+                        state.selectedAllowed = {};
+                    }
                     state.selectedProhibited[use] = use;
                 } else {
                     delete state.selectedProhibited[use];
@@ -306,6 +336,8 @@
             checkbox.checked = !!state.selectedAllowed[item.key];
             checkbox.addEventListener('change', function () {
                 if (checkbox.checked) {
+                    var exclusive = activeExclusiveProhibited();
+                    if (exclusive) { delete state.selectedProhibited[exclusive]; }
                     state.selectedAllowed[item.key] = item;
                 } else {
                     delete state.selectedAllowed[item.key];
@@ -427,11 +459,30 @@
         }
 
         syncCheckboxes();
+        renderCheckboxAvailability();
 
         var hasSelections = (prohibitedKeys.length + allowedKeys.length) > 0;
         el.copyBtn.disabled = !hasSelections;
         el.sendBtn.disabled = !hasSelections;
         el.clipboardPreview.value = buildClipboardText();
+    }
+
+    function renderCheckboxAvailability() {
+        var exclusive = activeExclusiveProhibited();
+
+        Array.prototype.forEach.call(el.prohibitedList.querySelectorAll('li.card-item'), function (li, i) {
+            var use = state.prohibited[i];
+            var disabled = !!exclusive && use !== exclusive;
+            li.querySelector('input[type="checkbox"]').disabled = disabled;
+            li.classList.toggle('is-disabled', disabled);
+        });
+
+        Array.prototype.forEach.call(el.allowedList.querySelectorAll('li.card-item'), function (li) {
+            li.querySelector('input[type="checkbox"]').disabled = !!exclusive;
+            li.classList.toggle('is-disabled', !!exclusive);
+        });
+
+        el.exclusiveBanner.hidden = !exclusive;
     }
 
     function syncCheckboxes() {
