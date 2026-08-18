@@ -59,9 +59,14 @@ body {
    (fixing both width and height distorts the logo if the actual file's
    proportions ever differ from whatever numbers were guessed). */
 .header_top .logo {
-    height: 60px;
+    height: 30px;
     width: auto;
     display: block;
+}
+
+.brown-bar {
+    background-color: var(--brown);
+    height: 64px;
 }
 
 #page {
