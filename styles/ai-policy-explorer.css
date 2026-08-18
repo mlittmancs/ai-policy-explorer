@@ -52,6 +52,18 @@ body {
     padding: 0 1.5rem;
 }
 
+/* The provided header.css doesn't constrain the logo's size at all; without
+   an explicit width/height an <img> renders at native pixel size, which can
+   be huge. Fixing only the height and leaving width auto keeps it a
+   sensible size while always preserving the image's real aspect ratio
+   (fixing both width and height distorts the logo if the actual file's
+   proportions ever differ from whatever numbers were guessed). */
+.header_top .logo {
+    height: 60px;
+    width: auto;
+    display: block;
+}
+
 #page {
     width: 100%;
     max-width: 800px;
